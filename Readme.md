@@ -67,7 +67,7 @@ Issue pull requests or send feature requests.
   * в _Способ оплаты_ выберите _Begateway_
   * нажмите _Сохранить и закрыть_
 *	Откройте способ оплаты _begateway_ и нажмите закладку _Конфигурация_. Здесь необходимо заполнить
-  * Адрес платежного шлюз, например, _demo-gateway.begateway.com_
+  * Адрес платежного шлюза, например, _demo-gateway.begateway.com_
   * Адрес страницы оплаты:, например, _checkout.begateway.com_
   * Тип транзакции: _authorization_ or _payment_
   * ID магазина, например, _361_
