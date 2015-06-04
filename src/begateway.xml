@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<extension version="3.0" type="plugin" group="vmpayment" method="upgrade">
+	<name>Begateway</name>
+ 	<author>eComCharge Ltd SIA</author>
+  <creationDate>May 2015</creationDate>
+	<authorEmail>admin@ecomcharge.com</authorEmail>
+  <license>http://opensource.org/licenses/MIT</license>
+	<version>2.0.1</version>
+	<description>Begateway Payment Plugin</description>
+	<files>
+ 		<filename plugin="begateway">begateway.php</filename>
+    <filename plugin="begateway">bepaid-api-php/lib/eComCharge/ApiAbstract.php</filename>
+    <filename plugin="begateway">bepaid-api-php/lib/eComCharge/Authorization.php</filename>
+    <filename plugin="begateway">bepaid-api-php/lib/eComCharge/Capture.php</filename>
+    <filename plugin="begateway">bepaid-api-php/lib/eComCharge/Card.php</filename>
+    <filename plugin="begateway">bepaid-api-php/lib/eComCharge/CardToken.php</filename>
+    <filename plugin="begateway">bepaid-api-php/lib/eComCharge/ChildTransaction.php</filename>
+    <filename plugin="begateway">bepaid-api-php/lib/eComCharge/Credit.php</filename>
+    <filename plugin="begateway">bepaid-api-php/lib/eComCharge/Customer.php</filename>
+    <filename plugin="begateway">bepaid-api-php/lib/eComCharge/GatewayTransport.php</filename>
+    <filename plugin="begateway">bepaid-api-php/lib/eComCharge/GetPaymentPageToken.php</filename>
+    <filename plugin="begateway">bepaid-api-php/lib/eComCharge/Language.php</filename>
+    <filename plugin="begateway">bepaid-api-php/lib/eComCharge/Logger.php</filename>
+    <filename plugin="begateway">bepaid-api-php/lib/eComCharge/Money.php</filename>
+    <filename plugin="begateway">bepaid-api-php/lib/eComCharge/Payment.php</filename>
+    <filename plugin="begateway">bepaid-api-php/lib/eComCharge/QueryByToken.php</filename>
+    <filename plugin="begateway">bepaid-api-php/lib/eComCharge/QueryByTrackingId.php</filename>
+    <filename plugin="begateway">bepaid-api-php/lib/eComCharge/QueryByUid.php</filename>
+    <filename plugin="begateway">bepaid-api-php/lib/eComCharge/Refund.php</filename>
+    <filename plugin="begateway">bepaid-api-php/lib/eComCharge/Response.php</filename>
+    <filename plugin="begateway">bepaid-api-php/lib/eComCharge/ResponseBase.php</filename>
+    <filename plugin="begateway">bepaid-api-php/lib/eComCharge/ResponseCardToken.php</filename>
+    <filename plugin="begateway">bepaid-api-php/lib/eComCharge/ResponseCheckout.php</filename>
+    <filename plugin="begateway">bepaid-api-php/lib/eComCharge/Settings.php</filename>
+    <filename plugin="begateway">bepaid-api-php/lib/eComCharge/Void.php</filename>
+    <filename plugin="begateway">bepaid-api-php/lib/eComCharge/Webhook.php</filename>
+    <filename plugin="begateway">bepaid-api-php/lib/ecomcharge.php</filename>
+    <filename plugin="begateway">bepaid-api-php/VERSION</filename>
+	</files>
+	<languages>
+		<language tag="en-GB">en-GB.plg_vmpayment_begateway.ini</language>
+		<language tag="ru-RU">ru-RU.plg_vmpayment_begateway.ini</language>
+	</languages>
+  <vmconfig>
+    <fields name="params">
+      <fieldset name="basic">
+        <field name="GatewayUrl" type="text" label="PLG_BEGATEWAY_VM3_GATEWAYURL" />
+        <field name="PageUrl" type="text" label="PLG_BEGATEWAY_VM3_PAGEURL" />
+        <field name="TransactionType" type="list" default="0" label="PLG_BEGATEWAY_VM3_TRANSACTIONTYPE">
+          <option value="payment">Payment</option>
+          <option value="authorization">Authorization</option>
+        </field>
+        <field name="ShopId" type="text" label="PLG_BEGATEWAY_VM3_SHOPID" />
+        <field name="ShopKey" type="text" label="PLG_BEGATEWAY_VM3_SHOPKEY" />
+      </fieldset>
+    </fields>
+  </vmconfig>
+</extension>
