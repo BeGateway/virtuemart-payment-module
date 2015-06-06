@@ -12,6 +12,9 @@
 *	Open _Components_->_VirtueMart_ and select the _Payment methods_.
 * Press _New_.
 *	Configure it
+  * set _Logotype_ of the payment method. You can use either pre-loaded
+    one with VISA and MasterCard logotypes or any own one which you have
+already uploaded via _Media Manager_ to the _images/stories/virtuemart/payment_ folder.
   * set _Payment Name_ to _Credit or debit card_
   * set _Sef Alias_ to _begateway_
   * set _Payment Description_ to _VISA_, _MasterCard_. You are free to
@@ -60,7 +63,9 @@ Issue pull requests or send feature requests.
 *	Откройте _Компоненты_->_VirtueMart_ и выберите _Способы оплаты_.
 * Нажмите _Создать_.
 *	Настройте модуль
-  * в _Название платежа_ введите _Банковские карты_
+  * в _Логотип_ выберите логотип этого способа оплаты. Вы можете
+    использовать либо уже загруженный __visa_mastercard_logos.png__ с логотипами VISA и MasterCard, либо использовать свой, который предварительно был загружен через _Медия-менеджер_ в каталог _images/stories/virtuemart/payment_.
+  * в _Название платежа_ введите _Банковская карта_
   * в _Псевдоним_ введите _begateway_
   * в _Описание платежа_ введите _VISA, MasterCard_
   * в _Опубликовано_ выберите _Да_
