@@ -42,6 +42,22 @@ class plgVMPaymentBegateway extends vmPSPlugin
         return $SQLfields;
     }
     
+    protected function displayLogos ($logo_list) {
+      $img = "";
+      if (!(empty($logo_list))) {
+        $url = JURI::root () . 'plugins/vmpayment/begateway/images/';
+        if (!is_array ($logo_list)) {
+          $logo_list = (array)$logo_list;
+        }
+        foreach ($logo_list as $logo) {
+          $alt_text = substr ($logo, 0, strpos ($logo, '.'));
+          $img .= '<span class="vmCartPaymentLogo" ><img style="width: 150px;" align="middle" src="' . $url . $logo . '"  alt="' . $alt_text . '" /></span> ';
+        }
+      }
+      return $img;
+    }
+
+    
     function plgVmConfirmedOrder($cart, $order)
     {
         if (!($method = $this->getVmPluginMethod($order['details']['BT']->virtuemart_paymentmethod_id))) {
@@ -92,15 +108,23 @@ class plgVMPaymentBegateway extends vmPSPlugin
         foreach ($countries as  $country) {
           if($country->virtuemart_country_id == $order['details']['BT']->virtuemart_country_id) {
             $transaction->customer->setCountry($country->country_2_code);
-            if (in_array($country->country_2_code,['US','CA'])) {
-              $state=isset($address->virtuemart_state_id) ? ShopFunctions::getStateByID($address->virtuemart_state_id, 'state_2_code') : 'NY';
-              $transaction->customer->setState($state);
+            break;
+          }
+        }
+        
+        if($country->country_2_code == 'CA' || $country->country_2_code == 'US') {
+          $stateModel = VmModel::getModel ('state');
+          $states = $stateModel->getStates($order['details']['BT']->virtuemart_country_id);
+          foreach ($states as  $state) {
+            if($state->virtuemart_state_id == $order['details']['BT']->virtuemart_state_id) {
+              $transaction->customer->setState($state->state_2_code);
+              break;
             }
           }
         }
         
         $transaction->setAddressHidden();
-    
+        
         $response = $transaction->submit();
 
         if(!$response->isSuccess()) {
