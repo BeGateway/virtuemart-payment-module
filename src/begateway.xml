@@ -10,7 +10,6 @@
 	<files>
  		<filename plugin="begateway">begateway.php</filename>
     <folder>bepaid-api-php</folder>
-    <folder>images</folder>
 	</files>
 	<languages folder="language">
 		<language tag="ru-RU">ru-RU.plg_vmpayment_begateway.ini</language>
@@ -19,9 +18,6 @@
   <vmconfig>
     <fields name="params">
       <fieldset name="basic">
-        <field name="payment_logos" scope="com_virtuemart" type="vmfiles" label="PLG_BEGATEWAY_VM3_LOGO"
-                      directory="/plugins/vmpayment/begateway/images"
-                      default="default" hide_default="1" hide_none="1" stripext="0" exclude="^_"/>
         <field name="GatewayUrl" type="text" label="PLG_BEGATEWAY_VM3_GATEWAYURL" />
         <field name="PageUrl" type="text" label="PLG_BEGATEWAY_VM3_PAGEURL" />
         <field name="TransactionType" type="list" default="0" label="PLG_BEGATEWAY_VM3_TRANSACTIONTYPE">
@@ -30,6 +26,9 @@
         </field>
         <field name="ShopId" type="text" label="PLG_BEGATEWAY_VM3_SHOPID" />
         <field name="ShopKey" type="text" label="PLG_BEGATEWAY_VM3_SHOPKEY" />
+        <field name="payment_logos" scope="com_virtuemart" type="vmfiles" label="PLG_BEGATEWAY_VM3_LOGO"
+                      directory="/images/stories/virtuemart/payment"
+                      default="default" hide_default="1" hide_none="1" stripext="0" exclude="^_"/>
       </fieldset>
     </fields>
   </vmconfig>
