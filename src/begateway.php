@@ -42,22 +42,6 @@ class plgVMPaymentBegateway extends vmPSPlugin
         return $SQLfields;
     }
     
-    protected function displayLogos ($logo_list) {
-      $img = "";
-      if (!(empty($logo_list))) {
-        $url = JURI::root () . 'plugins/vmpayment/begateway/images/';
-        if (!is_array ($logo_list)) {
-          $logo_list = (array)$logo_list;
-        }
-        foreach ($logo_list as $logo) {
-          $alt_text = substr ($logo, 0, strpos ($logo, '.'));
-          $img .= '<span class="vmCartPaymentLogo" ><img style="width: 150px;" align="middle" src="' . $url . $logo . '"  alt="' . $alt_text . '" /></span> ';
-        }
-      }
-      return $img;
-    }
-
-    
     function plgVmConfirmedOrder($cart, $order)
     {
         if (!($method = $this->getVmPluginMethod($order['details']['BT']->virtuemart_paymentmethod_id))) {
