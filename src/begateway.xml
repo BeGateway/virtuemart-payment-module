@@ -17,14 +17,14 @@
 	</languages>
   <params addpath="/administrator/components/com_virtuemart/elements">
       <param type="vmjpluginwarning"/>
-      <param name="GatewayUrl" type="text" label="PLG_BEGATEWAY_VM3_GATEWAYURL" default=""/>
-      <param name="PageUrl" type="text" label="PLG_BEGATEWAY_VM3_PAGEURL" default=""/>
+      <param name="GatewayUrl" type="text" label="PLG_BEGATEWAY_VM3_GATEWAYURL" default="" size="100"/>
+      <param name="PageUrl" type="text" label="PLG_BEGATEWAY_VM3_PAGEURL" default="" size="100"/>
       <param name="TransactionType" type="list" default="0" label="PLG_BEGATEWAY_VM3_TRANSACTIONTYPE">
-          <option value="payment">Payment</option>
-          <option value="authorization">Authorization</option>
+          <option value="payment">PLG_BEGATEWAY_VM3_TRX_TYPE_PAYMENT</option>
+          <option value="authorization">PLG_BEGATEWAY_VM3_TRX_TYPE_AUTH</option>
       </param>
       <param name="ShopId" type="text" label="PLG_BEGATEWAY_VM3_SHOPID" />
-      <param name="ShopKey" type="text" label="PLG_BEGATEWAY_VM3_SHOPKEY" />
+      <param name="ShopKey" type="text" label="PLG_BEGATEWAY_VM3_SHOPKEY" size="100"/>
       <param name="payment_logos" scope="com_virtuemart" type="vmfiles" label="PLG_BEGATEWAY_VM3_LOGO"
                       directory="/images/stories/virtuemart/payment"
                       default="default" hide_default="1" hide_none="1" stripext="0" exclude="^_"/>

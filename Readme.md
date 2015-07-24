@@ -7,7 +7,7 @@
 * Start up the administrative panel for Joomla (www.yourshop.com/administrator)
 * Choose _Extensions_->_Extension Manager_
 * Upload and install the payment module archive via **Upload Package File**.
-* Choose _Extensions_->_Plugin Manager_ and find the Begateway plugin and click it.
+* Choose _Extensions_->_Plugin Manager_ and find the _beGateway_ plugin and click it.
 *	Make sure that its status is set to _Enabled_ and press _Save & Close_.
 *	Open _Components_->_VirtueMart_ and select the _Payment methods_.
 * Press _New_.
@@ -22,8 +22,8 @@ already uploaded via _Media Manager_ to the _images/stories/virtuemart/payment_ 
   * set _Payment Method_ to _Begateway_
   * click _Save & Close_
 *	Open the beGateway payment method and go to _Configuration_. Here you fill in
-  * Payment gateway URL, e.g. _demo-gateway.begateway.com_
-  * Payment page URL:, e.g. _checkout.begateway.com_
+  * Payment gateway domain, e.g. _demo-gateway.begateway.com_
+  * Payment page domain:, e.g. _checkout.begateway.com_
   * Transaction type: _authorization_ or _payment_
   * Shop Id, e.g. _361_
   * Shop secret key, e.g. _b8647b68898b084b836474ed8d61ffe117c9a01168d867f24953b776ddcb134d_
