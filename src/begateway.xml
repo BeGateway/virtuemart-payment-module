@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<extension version="3.0" type="plugin" group="vmpayment" method="upgrade">
-	<name>Begateway</name>
- 	<author>Markus Shmidt</author>
-  <creationDate>May 2015</creationDate>
-	<authorEmail>markus.shmmidt@yandex.ru</authorEmail>
+<extension version="2.5" type="plugin" group="vmpayment" method="upgrade">
+	<name>beGateway</name>
+ 	<author>beGateway development team</author>
+  <creationDate>July 24 2015</creationDate>
+	<authorEmail>techsupport@ecomcharge.com</authorEmail>
   <license>http://opensource.org/licenses/MIT</license>
 	<version>2.0.1</version>
-	<description>Begateway Payment Plugin</description>
+	<description>beGateway Payment Plugin</description>
 	<files>
  		<filename plugin="begateway">begateway.php</filename>
     <folder>bepaid-api-php</folder>
@@ -15,21 +15,18 @@
 		<language tag="ru-RU">ru-RU.plg_vmpayment_begateway.ini</language>
 		<language tag="en-GB">en-GB.plg_vmpayment_begateway.ini</language>
 	</languages>
-  <vmconfig>
-    <fields name="params">
-      <fieldset name="basic">
-        <field name="GatewayUrl" type="text" label="PLG_BEGATEWAY_VM3_GATEWAYURL" />
-        <field name="PageUrl" type="text" label="PLG_BEGATEWAY_VM3_PAGEURL" />
-        <field name="TransactionType" type="list" default="0" label="PLG_BEGATEWAY_VM3_TRANSACTIONTYPE">
+  <params addpath="/administrator/components/com_virtuemart/elements">
+      <param type="vmjpluginwarning"/>
+      <param name="GatewayUrl" type="text" label="PLG_BEGATEWAY_VM3_GATEWAYURL" default=""/>
+      <param name="PageUrl" type="text" label="PLG_BEGATEWAY_VM3_PAGEURL" default=""/>
+      <param name="TransactionType" type="list" default="0" label="PLG_BEGATEWAY_VM3_TRANSACTIONTYPE">
           <option value="payment">Payment</option>
           <option value="authorization">Authorization</option>
-        </field>
-        <field name="ShopId" type="text" label="PLG_BEGATEWAY_VM3_SHOPID" />
-        <field name="ShopKey" type="text" label="PLG_BEGATEWAY_VM3_SHOPKEY" />
-        <field name="payment_logos" scope="com_virtuemart" type="vmfiles" label="PLG_BEGATEWAY_VM3_LOGO"
+      </param>
+      <param name="ShopId" type="text" label="PLG_BEGATEWAY_VM3_SHOPID" />
+      <param name="ShopKey" type="text" label="PLG_BEGATEWAY_VM3_SHOPKEY" />
+      <param name="payment_logos" scope="com_virtuemart" type="vmfiles" label="PLG_BEGATEWAY_VM3_LOGO"
                       directory="/images/stories/virtuemart/payment"
                       default="default" hide_default="1" hide_none="1" stripext="0" exclude="^_"/>
-      </fieldset>
-    </fields>
-  </vmconfig>
+  </params>
 </extension>
