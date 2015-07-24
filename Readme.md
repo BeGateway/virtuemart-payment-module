@@ -3,7 +3,7 @@
 ### Installation
 
 * Backup your webstore and database
-* Download [begateway.zip](https://github.com/BeGateway/virtuemart-payment-module/raw/virtuemart-2/begateway.zip)
+* Download [begateway.zip](https://github.com/beGateway/virtuemart-payment-module/raw/virtuemart-2/begateway.zip)
 * Start up the administrative panel for Joomla (www.yourshop.com/administrator)
 * Choose _Extensions_->_Extension Manager_
 * Upload and install the payment module archive via **Upload Package File**.
@@ -61,13 +61,13 @@ Issue pull requests or send feature requests.
 * Зайдите в панель администратора Joomla (www.yourshop.com/administrator)
 * Выберите _Расширения_->_Менеджер Расширений_
 * Загрузите и установите платежный модуль через **Загрузить файл пакета**.
-* Выберите _Расширения_->_Менеджер плагинов_, найдите Begateway плагин и кликните на нем.
+* Выберите _Расширения_->_Менеджер плагинов_, найдите beGateway плагин и кликните на нем.
 *	Убедитесь, что его _Состояние_ установленов в _Включено_ и нажмите _Сохранить и закрыть_.
 *	Откройте _Компоненты_->_VirtueMart_ и выберите _Способы оплаты_.
 * Нажмите _Создать_.
 *	Настройте модуль
   * в _Логотип_ выберите логотип этого способа оплаты. Вы можете
-    использовать либо [этот](https://github.com/BeGateway/virtuemart-payment-module/raw/virtuemart-2/visa_mastercard_logos.png) с логотипами VISA и MasterCard, либо использовать свой, который предварительно был загружен через _Медия-менеджер_ в каталог _images/stories/virtuemart/payment_.
+    использовать либо [этот](https://github.com/beGateway/virtuemart-payment-module/raw/virtuemart-2/visa_mastercard_logos.png) с логотипами VISA и MasterCard, либо использовать свой, который предварительно был загружен через _Медия-менеджер_ в каталог _images/stories/virtuemart/payment_.
   * в _Название платежа_ введите _Банковская карта_
   * в _Псевдоним_ введите _begateway_
   * в _Описание платежа_ введите _VISA, MasterCard_
@@ -77,7 +77,7 @@ Issue pull requests or send feature requests.
 *	Откройте способ оплаты _begateway_ и нажмите закладку _Конфигурация_. Здесь необходимо заполнить
   * Адрес платежного шлюза, например, _demo-gateway.begateway.com_
   * Адрес страницы оплаты:, например, _checkout.begateway.com_
-  * Тип транзакции: _authorization_ or _payment_
+  * Тип транзакции: _Оплата_ или _Преавторизация_
   * ID магазина, например, _361_
   * Ключ магазинa, например, _b8647b68898b084b836474ed8d61ffe117c9a01168d867f24953b776ddcb134d_
   * нажмите _Сохранить и закрыть_
