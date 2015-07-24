@@ -9,7 +9,7 @@
 	<description>beGateway Payment Plugin</description>
 	<files>
  		<filename plugin="begateway">begateway.php</filename>
-    <folder>bepaid-api-php</folder>
+    <folder>begateway-api-php</folder>
 	</files>
 	<languages folder="language">
 		<language tag="ru-RU">ru-RU.plg_vmpayment_begateway.ini</language>
