@@ -1,2 +1,2 @@
 all:
-	cd src &&	zip -r ../begateway.zip *
+	rm begateway.zip && cd src &&	zip -r ../begateway.zip *

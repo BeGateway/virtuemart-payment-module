@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <extension version="3.0" type="plugin" group="vmpayment" method="upgrade">
-	<name>Begateway</name>
- 	<author>Markus Shmidt</author>
-  <creationDate>May 2015</creationDate>
-	<authorEmail>markus.shmmidt@yandex.ru</authorEmail>
+	<name>beGateway</name>
+ 	<author>beGateway development team</author>
+  <creationDate>July 24 2015</creationDate>
+	<authorEmail>techsupport@ecomcharge.com</authorEmail>
   <license>http://opensource.org/licenses/MIT</license>
-	<version>2.0.1</version>
-	<description>Begateway Payment Plugin</description>
+	<version>2.1.0</version>
+	<description>beGateway Payment Plugin</description>
 	<files>
  		<filename plugin="begateway">begateway.php</filename>
     <folder>bepaid-api-php</folder>
@@ -18,14 +18,14 @@
   <vmconfig>
     <fields name="params">
       <fieldset name="basic">
-        <field name="GatewayUrl" type="text" label="PLG_BEGATEWAY_VM3_GATEWAYURL" />
-        <field name="PageUrl" type="text" label="PLG_BEGATEWAY_VM3_PAGEURL" />
+        <field name="GatewayUrl" type="text" label="PLG_BEGATEWAY_VM3_GATEWAYURL" size="100" />
+        <field name="PageUrl" type="text" label="PLG_BEGATEWAY_VM3_PAGEURL" size="100"/>
         <field name="TransactionType" type="list" default="0" label="PLG_BEGATEWAY_VM3_TRANSACTIONTYPE">
-          <option value="payment">Payment</option>
-          <option value="authorization">Authorization</option>
+          <option value="payment">PLG_BEGATEWAY_VM3_TRX_TYPE_PAYMENT</option>
+          <option value="authorization">PLG_BEGATEWAY_VM3_TRX_TYPE_AUTH</option>
         </field>
         <field name="ShopId" type="text" label="PLG_BEGATEWAY_VM3_SHOPID" />
-        <field name="ShopKey" type="text" label="PLG_BEGATEWAY_VM3_SHOPKEY" />
+        <field name="ShopKey" type="text" label="PLG_BEGATEWAY_VM3_SHOPKEY" size="100"/>
         <field name="payment_logos" scope="com_virtuemart" type="vmfiles" label="PLG_BEGATEWAY_VM3_LOGO"
                       directory="/images/stories/virtuemart/payment"
                       default="default" hide_default="1" hide_none="1" stripext="0" exclude="^_"/>
