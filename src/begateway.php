@@ -53,6 +53,20 @@ class plgVMPaymentBegateway extends vmPSPlugin
             return FALSE;
         }
 
+        if (!class_exists('VirtueMartModelOrders')) {
+          require(JPATH_VM_ADMINISTRATOR . DS . 'models' . DS . 'orders.php');
+        }
+        if (!class_exists('VirtueMartModelCurrency')) {
+          require(JPATH_VM_ADMINISTRATOR . DS . 'models' . DS . 'currency.php');
+        }
+        if (!class_exists ('CurrencyDisplay')) {
+          require(JPATH_VM_ADMINISTRATOR . DS . 'helpers' . DS . 'currencydisplay.php');
+        }
+
+        if (!class_exists('TableVendors')) {
+          require(JPATH_VM_ADMINISTRATOR . DS . 'tables' . DS . 'vendors.php');
+        }
+
         \beGateway\Settings::$shopId = $method->ShopId;
         \beGateway\Settings::$shopKey = $method->ShopKey;
         \beGateway\Settings::$gatewayBase = 'https://' . $method->GatewayUrl;
@@ -60,7 +74,6 @@ class plgVMPaymentBegateway extends vmPSPlugin
 
         $currency               = shopFunctions::getCurrencyByID($method->payment_currency, 'currency_code_3');
         $totalInPaymentCurrency = vmPSPlugin::getAmountInCurrency($order['details']['BT']->order_total, $method->payment_currency);
-
 
         $order_id = $order['details']['BT']->order_number;
 
