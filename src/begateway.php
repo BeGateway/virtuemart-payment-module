@@ -53,11 +53,14 @@ class plgVMPaymentBegateway extends vmPSPlugin
             return FALSE;
         }
 
+        \beGateway\Settings::$shopId = $method->ShopId;
+        \beGateway\Settings::$shopKey = $method->ShopKey;
+        \beGateway\Settings::$gatewayBase = 'https://' . $method->GatewayUrl;
+        \beGateway\Settings::$checkoutBase = 'https://' . $method->PageUrl;
+
         $currency               = shopFunctions::getCurrencyByID($method->payment_currency, 'currency_code_3');
         $totalInPaymentCurrency = vmPSPlugin::getAmountInCurrency($order['details']['BT']->order_total, $method->payment_currency);
 
-        \beGateway\Settings::$shopId = $method->ShopId;
-        \beGateway\Settings::$shopKey = $method->ShopKey;
 
         $order_id = $order['details']['BT']->order_number;
 
@@ -234,9 +237,9 @@ class plgVMPaymentBegateway extends vmPSPlugin
         return $this->onShowOrderPrint($order_number, $method_id);
     }
 
-    function plgVmDeclarePluginParamsPaymentVM3(&$data)
-    {
-        return $this->declarePluginParams('payment', $data);
+    function plgVmDeclarePluginParamsPayment ($name, $id, &$data) {
+
+      return $this->declarePluginParams ('payment', $name, $id, $data);
     }
 
     function plgVmSetOnTablePluginParamsPayment($name, $id, &$table)
@@ -284,6 +287,8 @@ class plgVMPaymentBegateway extends vmPSPlugin
 
             \beGateway\Settings::$shopId = $method->ShopId;
             \beGateway\Settings::$shopKey = $method->ShopKey;
+            \beGateway\Settings::$gatewayBase = 'https://' . $method->GatewayUrl;
+            \beGateway\Settings::$checkoutBase = 'https://' . $method->PageUrl;
 
             if ($webhook->isAuthorized() && $webhook->isSuccess() && $order['details']['BT']->order_status == 'P') {
                 $message = 'UID: '.$webhook->getUid().'<br>';
