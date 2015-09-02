@@ -72,7 +72,7 @@ class plgVMPaymentBegateway extends vmPSPlugin
         \beGateway\Settings::$gatewayBase = 'https://' . $method->GatewayUrl;
         \beGateway\Settings::$checkoutBase = 'https://' . $method->PageUrl;
 
-        $currency               = shopFunctions::getCurrencyByID($method->payment_currency, 'currency_code_3');
+        $currency               = shopFunctions::getCurrencyByID($cart->pricesCurrency, 'currency_code_3');
         $totalInPaymentCurrency = vmPSPlugin::getAmountInCurrency($order['details']['BT']->order_total, $method->payment_currency);
 
         $order_id = $order['details']['BT']->order_number;
