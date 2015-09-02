@@ -53,7 +53,7 @@ class plgVMPaymentBegateway extends vmPSPlugin
             return FALSE;
         }
 
-        $currency               = shopFunctions::getCurrencyByID($method->payment_currency, 'currency_code_3');
+        $currency               = shopFunctions::getCurrencyByID($cart->pricesCurrency, 'currency_code_3');
         $totalInPaymentCurrency = vmPSPlugin::getAmountInCurrency($order['details']['BT']->order_total, $method->payment_currency);
 
         \beGateway\Settings::$shopId = $method->ShopId;
