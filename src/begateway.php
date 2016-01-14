@@ -73,17 +73,23 @@ class plgVMPaymentBegateway extends vmPSPlugin
         \beGateway\Settings::$checkoutBase = 'https://' . $method->PageUrl;
 
         $currency               = shopFunctions::getCurrencyByID($cart->pricesCurrency, 'currency_code_3');
-        $totalInPaymentCurrency = vmPSPlugin::getAmountInCurrency($order['details']['BT']->order_total, $method->payment_currency);
+        $paymentCurrency = CurrencyDisplay::getInstance ($method->payment_currency);
+        $totalInPaymentCurrency = round ($paymentCurrency->convertCurrencyTo ($method->payment_currency,
+           $order['details']['BT']->order_total,
+           FALSE), 2);
+
+        $lang = JFactory::getLanguage ();
+        $tag = substr ($lang->get ('tag'), 0, 2);
 
         $order_id = $order['details']['BT']->order_number;
 
         $transaction = new \beGateway\GetPaymentPageToken;
 
         $transaction->money->setCurrency($currency);
-        $transaction->money->setAmount($totalInPaymentCurrency['value']);
+        $transaction->money->setAmount($totalInPaymentCurrency);
         $transaction->setTrackingId($order['details']['BT']->virtuemart_paymentmethod_id . '|' . $order_id);
-        $transaction->setDescription(vmText::_('PLG_BEGATEWAY_VM3_ORDER') . ' #' . $order_id);
-        $transaction->setLanguage(substr($order['details']['BT']->order_language, 0, 2));
+        $transaction->setDescription(JText::_('PLG_BEGATEWAY_VM3_ORDER') . ' #' . $order_id);
+        $transaction->setLanguage($tag);
 
         if($method->TransactionType == 'authorization') {
           $transaction->setAuthorizationTransactionType();
@@ -163,14 +169,6 @@ class plgVMPaymentBegateway extends vmPSPlugin
 
     function checkConditions($cart, $method, $cart_prices)
     {
-        $this->convert_condition_amount($method);
-        $amount  = $this->getCartAmount($cart_prices);
-        $address = (($cart->ST == 0) ? $cart->BT : $cart->ST);
-
-        $amount_cond = ($amount >= $method->min_amount AND $amount <= $method->max_amount OR ($method->min_amount <= $amount AND ($method->max_amount == 0)));
-        if (!$amount_cond) {
-            return FALSE;
-        }
         $countries = array();
         if (!empty($method->countries)) {
             if (!is_array($method->countries)) {
@@ -191,10 +189,8 @@ class plgVMPaymentBegateway extends vmPSPlugin
         if (count($countries) == 0 || in_array($address['virtuemart_country_id'], $countries)) {
             return TRUE;
         }
-
         return FALSE;
     }
-
     function plgVmOnStoreInstallPaymentPluginTable($jplugin_id)
     {
         return $this->onStoreInstallPluginTable($jplugin_id);
