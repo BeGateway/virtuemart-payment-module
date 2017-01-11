@@ -1,4 +1,4 @@
-## VirtueMart payment module
+## VirtueMart 3 payment module
 
 ### Installation
 
@@ -52,7 +52,7 @@ to make a test payment:
 Issue pull requests or send feature requests.
 
 
-## Платежный модуль VirtueMart
+## Платежный модуль VirtueMart 3
 
 ### Установка
 
