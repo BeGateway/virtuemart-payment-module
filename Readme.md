@@ -1,4 +1,4 @@
-## VirtueMart payment module
+## VirtueMart 2.0.x payment module
 
 ### Installation
 
@@ -32,7 +32,7 @@ already uploaded via _Media Manager_ to the _images/stories/virtuemart/payment_ 
 
 ### Notes
 
-Tested and developed with VirtueMart 2.6.14
+Tested and developed with VirtueMart 2.0.20b
 
 PHP 5.3+ is required.
 
@@ -52,7 +52,7 @@ to make a test payment:
 Issue pull requests or send feature requests.
 
 
-## Платежный модуль VirtueMart
+## Платежный модуль VirtueMart 2.0.x
 
 ### Установка
 
@@ -85,7 +85,7 @@ Issue pull requests or send feature requests.
 
 ### Примечания
 
-Протестировано и разработано для VirtueMart 2.6.14
+Протестировано и разработано для VirtueMart 2.0.20b
 
 Требуется PHP 5.3+
 
