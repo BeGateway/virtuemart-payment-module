@@ -1,5 +1,7 @@
 ## VirtueMart 3 payment module
 
+[Click here](https://github.com/beGateway/virtuemart-payment-module/tree/virtuemart-2) to switch to the payment module for VirtueMart 2
+
 ### Installation
 
 * Backup your webstore and database
@@ -51,8 +53,9 @@ to make a test payment:
 
 Issue pull requests or send feature requests.
 
-
 ## Платежный модуль VirtueMart 3
+
+Модуль оплаты для VirtueMart 2 находится [здесь](https://github.com/beGateway/virtuemart-payment-module/tree/virtuemart-2)
 
 ### Установка
 
