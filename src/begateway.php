@@ -58,10 +58,12 @@ class plgVMPaymentBegateway extends vmPSPlugin
 
         \beGateway\Settings::$shopId = $method->ShopId;
         \beGateway\Settings::$shopKey = $method->ShopKey;
+        \beGateway\Settings::$gatewayBase = 'https://' . $method->GatewayUrl;
+        \beGateway\Settings::$checkoutBase = 'https://' . $method->PageUrl;
 
         $order_id = $order['details']['BT']->order_number;
 
-        $transaction = new \beGateway\GetPaymentPageToken;
+        $transaction = new \beGateway\GetPaymentToken;
 
         $transaction->money->setCurrency($currency);
         $transaction->money->setAmount($totalInPaymentCurrency['value']);
@@ -119,7 +121,7 @@ class plgVMPaymentBegateway extends vmPSPlugin
           die;
         }
 
-        header('Location: https://'.$method->PageUrl.'/checkout?token='.$response->getToken());
+        header('Location: '.$response->getRedirectUrl());
         die;
     }
 
@@ -284,6 +286,8 @@ class plgVMPaymentBegateway extends vmPSPlugin
 
             \beGateway\Settings::$shopId = $method->ShopId;
             \beGateway\Settings::$shopKey = $method->ShopKey;
+            \beGateway\Settings::$gatewayBase = 'https://' . $method->GatewayUrl;
+            \beGateway\Settings::$checkoutBase = 'https://' . $method->PageUrl;
 
             if ($webhook->isAuthorized() && $webhook->isSuccess() && $order['details']['BT']->order_status == 'P') {
                 $message = 'UID: '.$webhook->getUid().'<br>';
