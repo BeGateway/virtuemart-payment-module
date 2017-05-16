@@ -77,7 +77,7 @@ class plgVMPaymentBegateway extends vmPSPlugin
 
         $order_id = $order['details']['BT']->order_number;
 
-        $transaction = new \beGateway\GetPaymentPageToken;
+        $transaction = new \beGateway\GetPaymentToken;
 
         $transaction->money->setCurrency($currency);
         $transaction->money->setAmount($totalInPaymentCurrency['value']);
@@ -135,7 +135,7 @@ class plgVMPaymentBegateway extends vmPSPlugin
           die;
         }
 
-        header('Location: https://'.$method->PageUrl.'/checkout?token='.$response->getToken());
+        header('Location: '.$response->getRedirectUrl());
         die;
     }
 
