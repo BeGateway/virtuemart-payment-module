@@ -56,14 +56,14 @@ class plgVMPaymentBegateway extends vmPSPlugin
         $currency               = shopFunctions::getCurrencyByID($cart->pricesCurrency, 'currency_code_3');
         $totalInPaymentCurrency = vmPSPlugin::getAmountInCurrency($order['details']['BT']->order_total, $method->payment_currency);
 
-        \beGateway\Settings::$shopId = $method->ShopId;
-        \beGateway\Settings::$shopKey = $method->ShopKey;
-        \beGateway\Settings::$gatewayBase = 'https://' . $method->GatewayUrl;
-        \beGateway\Settings::$checkoutBase = 'https://' . $method->PageUrl;
+        \BeGateway\Settings::$shopId = $method->ShopId;
+        \BeGateway\Settings::$shopKey = $method->ShopKey;
+        \BeGateway\Settings::$gatewayBase = 'https://' . $method->GatewayUrl;
+        \BeGateway\Settings::$checkoutBase = 'https://' . $method->PageUrl;
 
         $order_id = $order['details']['BT']->order_number;
 
-        $transaction = new \beGateway\GetPaymentToken;
+        $transaction = new \BeGateway\GetPaymentToken;
 
         $transaction->money->setCurrency($currency);
         $transaction->money->setAmount($totalInPaymentCurrency['value']);
@@ -73,6 +73,27 @@ class plgVMPaymentBegateway extends vmPSPlugin
 
         if($method->TransactionType == 'authorization') {
           $transaction->setAuthorizationTransactionType();
+        }
+
+        $transaction->setTestMode($method->TestMode == '1');
+
+        if ($method->EnableCards == '1') {
+          $transaction->addPaymentMethod(new \BeGateway\PaymentMethod\CreditCard);
+        }
+
+        if ($method->EnableHalva == '1') {
+          $transaction->addPaymentMethod(new \BeGateway\PaymentMethod\CreditCardHalva);
+        }
+
+        if ($method->EnableErip == '1') {
+          $transaction->addPaymentMethod(
+            new \BeGateway\PaymentMethod\Erip(
+              array(
+                'order_id' => $order['details']['BT']->virtuemart_order_id,
+                'account_number' => strval($order_id)
+              )
+            )
+          );
         }
 
         $notification_url = JROUTE::_(JURI::root() . 'index.php?option=com_virtuemart&view=pluginresponse&task=pluginresponsereceived&action=begateway_result');
@@ -111,8 +132,6 @@ class plgVMPaymentBegateway extends vmPSPlugin
             }
           }
         }
-
-        $transaction->setAddressHidden();
 
         $response = $transaction->submit();
 
@@ -265,7 +284,7 @@ class plgVMPaymentBegateway extends vmPSPlugin
             return true;
         } else if ($get['action'] == 'begateway_result') {
 
-            $webhook = new \beGateway\Webhook;
+            $webhook = new \BeGateway\Webhook;
 
             if (!class_exists('VirtueMartModelOrders'))
                 require(JPATH_VM_ADMINISTRATOR . DS . 'models' . DS . 'orders.php');
@@ -284,10 +303,10 @@ class plgVMPaymentBegateway extends vmPSPlugin
                 return NULL;
             }
 
-            \beGateway\Settings::$shopId = $method->ShopId;
-            \beGateway\Settings::$shopKey = $method->ShopKey;
-            \beGateway\Settings::$gatewayBase = 'https://' . $method->GatewayUrl;
-            \beGateway\Settings::$checkoutBase = 'https://' . $method->PageUrl;
+            \BeGateway\Settings::$shopId = $method->ShopId;
+            \BeGateway\Settings::$shopKey = $method->ShopKey;
+            \BeGateway\Settings::$gatewayBase = 'https://' . $method->GatewayUrl;
+            \BeGateway\Settings::$checkoutBase = 'https://' . $method->PageUrl;
 
             if ($webhook->isAuthorized() && $webhook->isSuccess() && $order['details']['BT']->order_status == 'P') {
                 $message = 'UID: '.$webhook->getUid().'<br>';
@@ -308,6 +327,6 @@ class plgVMPaymentBegateway extends vmPSPlugin
     }
 
     private function _loadLibrary() {
-      require JPATH_SITE . DS . 'plugins' . DS . 'vmpayment' . DS . 'begateway' . DS . 'begateway-api-php' . DS . 'lib' . DS . 'beGateway.php';
+      require JPATH_SITE . DS . 'plugins' . DS . 'vmpayment' . DS . 'begateway' . DS . 'begateway-api-php' . DS . 'lib' . DS . 'BeGateway.php';
     }
 }
