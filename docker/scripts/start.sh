@@ -2,7 +2,7 @@
 
 # Install Joomla + VM
 if [ ! -e /var/www/html/.first-run-complete ]; then
-  rm -f /var/www/html/*
+  rm -rf /var/www/html/*
   unzip /joomla-vm.zip -d /var/www/html
 
   chown -R nobody.nobody /var/www

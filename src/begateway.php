@@ -53,8 +53,14 @@ class plgVMPaymentBegateway extends vmPSPlugin
             return FALSE;
         }
 
-        $currency               = shopFunctions::getCurrencyByID($cart->pricesCurrency, 'currency_code_3');
-        $totalInPaymentCurrency = vmPSPlugin::getAmountInCurrency($order['details']['BT']->order_total, $method->payment_currency);
+        $this->getPaymentCurrency($method);
+        $q = 'SELECT `currency_code_3` FROM `#__virtuemart_currencies` WHERE `virtuemart_currency_id`="' . $method->payment_currency . '" ';
+        $db = JFactory::getDBO();
+        $db->setQuery($q);
+        $currency_code_3 = $db->loadResult();
+
+        $paymentCurrency = CurrencyDisplay::getInstance($method->payment_currency);
+        $totalInPaymentCurrency = round($paymentCurrency->convertCurrencyTo($method->payment_currency, $order['details']['BT']->order_total, false), 2);
 
         \BeGateway\Settings::$shopId = $method->ShopId;
         \BeGateway\Settings::$shopKey = $method->ShopKey;
@@ -65,8 +71,8 @@ class plgVMPaymentBegateway extends vmPSPlugin
 
         $transaction = new \BeGateway\GetPaymentToken;
 
-        $transaction->money->setCurrency($currency);
-        $transaction->money->setAmount($totalInPaymentCurrency['value']);
+        $transaction->money->setCurrency($currency_code_3);
+        $transaction->money->setAmount($totalInPaymentCurrency);
         $transaction->setTrackingId($order['details']['BT']->virtuemart_paymentmethod_id . '|' . $order_id);
         $transaction->setDescription(vmText::_('PLG_BEGATEWAY_VM3_ORDER') . ' #' . $order_id);
         $transaction->setLanguage(substr($order['details']['BT']->order_language, 0, 2));
@@ -328,5 +334,21 @@ class plgVMPaymentBegateway extends vmPSPlugin
 
     private function _loadLibrary() {
       require JPATH_SITE . DS . 'plugins' . DS . 'vmpayment' . DS . 'begateway' . DS . 'begateway-api-php' . DS . 'lib' . DS . 'BeGateway.php';
+    }
+
+    protected function getVarsToPush() {
+      return array(
+        'ShopId' => array('', 'char'),
+        'ShopKey' => array('', 'char'),
+        'GatewayUrl' => array('', 'char'),
+        'PageUrl' => array('', 'char'),
+        'TransactionType' => array('', 'char'),
+        'payment_currency' => array('', 'int'),
+        'TestMode' => array(0, 'int'),
+        'EnableCards' => array(0, 'int'),
+        'EnableHalva' => array(0, 'int'),
+        'EnableErip' => array(0, 'int'),
+        'payment_logos' => array('', 'char')
+      );
     }
 }

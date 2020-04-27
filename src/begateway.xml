@@ -5,7 +5,7 @@
   <creationDate>Dec 18 2016</creationDate>
 	<authorEmail>techsupport@ecomcharge.com</authorEmail>
   <license>http://opensource.org/licenses/MIT</license>
-	<version>2.3.0</version>
+	<version>2.3.1</version>
 	<description>beGateway Payment Plugin</description>
 	<files>
  		<filename plugin="begateway">begateway.php</filename>
@@ -26,6 +26,7 @@
           <option value="payment">PLG_BEGATEWAY_VM3_TRX_TYPE_PAYMENT</option>
           <option value="authorization">PLG_BEGATEWAY_VM3_TRX_TYPE_AUTH</option>
         </field>
+        <field name="payment_currency" type="vmacceptedcurrency" default="" label="PLG_BEGATEWAY_CURRENCY" description="PLG_BEGATEWAY_CURRENCY_DESC" />
         <field name="TestMode" type="list" default="0" label="PLG_BEGATEWAY_VM3_TEST_MODE">
           <option value="0">JNO</option>
           <option value="1">JYES</option>

@@ -10,6 +10,8 @@ services:
     ports:
       - 80:8080
     tty: true
+    volumes:
+     - ./src:/var/www/html/plugins/vmpayment/begateway
     restart: always
 
   virtuemart_3_4:
@@ -17,8 +19,6 @@ services:
       args:
         virtuemart_version: "VirtueMart3.4.2_Joomla_3.8.12-Stable-Full_Package"
       <<: *build
-    # volumes:
-    #   - ./begateway:/var/www/html/modules/begateway
     <<: *virtuemart
 
   virtuemart_3_6:
