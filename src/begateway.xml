@@ -34,6 +34,10 @@
           <option value="0">JNO</option>
           <option value="1">JYES</option>
         </field>
+        <field name="debug_mode" type="list" default="0" label="VMPAYMENT_BEGATEWAY_DEBUG_MODE" desc="VMPAYMENT_BEGATEWAY_DEBUG_MODE_DESC">
+          <option value="0">JNO</option>
+          <option value="1">JYES</option>
+        </field>
         <field name="EnableCards" type="list" default="1" label="VMPAYMENT_BEGATEWAY_ENABLE_CARD">
           <option value="1">JYES</option>
           <option value="0">JNO</option>

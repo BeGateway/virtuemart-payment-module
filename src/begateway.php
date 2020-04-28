@@ -139,15 +139,33 @@ class plgVMPaymentBegateway extends vmPSPlugin
           }
         }
 
-        $response = $transaction->submit();
-
-        if(!$response->isSuccess()) {
-          echo $response->getMessage();
-          die;
+        if ($method->debug_mode == 1) {
+          vmDebug('BEGATEWAY token request data', print_r($transaction, true));
         }
 
-        header('Location: '.$response->getRedirectUrl());
-        die;
+        $response = $transaction->submit();
+
+        if ($method->debug_mode == 1) {
+          vmDebug('BEGATEWAY token request response', print_r($response, true));
+        }
+
+        $returnValue = 0;
+
+        if ($response->isSuccess()) {
+    			$returnValue = 2;
+    			$html = $this->renderByLayout(
+            'displaypayment',
+            array(
+			        'response' => $response->getRedirectUrl()
+			      )
+          );
+    		} else {
+    			$html = vmText::_ ('VMPAYMENT_BEGATEWAY_TECHNICAL_ERROR') .
+  				" <br /> - " . addslashes ($response->getMessage()) . "<br />" .
+  				vmText::_ ('VMPAYMENT_BEGATEWAY_CONTACT_SHOPOWNER');
+    		}
+
+        return $this->processConfirmedOrderPaymentResponse ($returnValue, $cart, $order, $html, $this->renderPluginName($method, $order), '');
     }
 
     function plgVmOnShowOrderBEPayment($virtuemart_order_id, $virtuemart_payment_id)
@@ -345,6 +363,7 @@ class plgVMPaymentBegateway extends vmPSPlugin
         'TransactionType' => array('', 'char'),
         'payment_currency' => array('', 'int'),
         'TestMode' => array(0, 'int'),
+        'debug_mode' => array(0, 'int'),
         'EnableCards' => array(0, 'int'),
         'EnableHalva' => array(0, 'int'),
         'EnableErip' => array(0, 'int'),
