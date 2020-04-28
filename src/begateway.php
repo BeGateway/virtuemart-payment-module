@@ -336,7 +336,7 @@ class plgVMPaymentBegateway extends vmPSPlugin
       require JPATH_SITE . DS . 'plugins' . DS . 'vmpayment' . DS . 'begateway' . DS . 'begateway-api-php' . DS . 'lib' . DS . 'BeGateway.php';
     }
 
-    protected function getVarsToPush() {
+    public function getVarsToPush() {
       return array(
         'ShopId' => array('', 'char'),
         'ShopKey' => array('', 'char'),
@@ -348,7 +348,10 @@ class plgVMPaymentBegateway extends vmPSPlugin
         'EnableCards' => array(0, 'int'),
         'EnableHalva' => array(0, 'int'),
         'EnableErip' => array(0, 'int'),
-        'payment_logos' => array('', 'char')
+        'payment_logos' => array('', 'char'),
+        'countries' => array(0, 'char'),
+        'min_amount' => array(0, 'int'),
+        'max_amount' => array(0, 'int')
       );
     }
 }

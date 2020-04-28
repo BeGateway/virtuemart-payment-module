@@ -27,6 +27,9 @@
           <option value="authorization">PLG_BEGATEWAY_VM3_TRX_TYPE_AUTH</option>
         </field>
         <field name="payment_currency" type="vmacceptedcurrency" default="" label="PLG_BEGATEWAY_CURRENCY" description="PLG_BEGATEWAY_CURRENCY_DESC" />
+        <field name="countries" type="vmcountries"  scope="com_virtuemart" default="" label="PLG_BEGATEWAY_COUNTRIES" description="PLG_BEGATEWAY_COUNTRIES_DESC"/>
+        <field name="min_amount" type="text"  label="PLG_BEGATEWAY_MIN_AMOUNT" description="PLG_BEGATEWAY_MIN_AMOUNT_EXPLAIN" />
+        <field name="max_amount" type="text"  label="PLG_BEGATEWAY_MAX_AMOUNT" description="PLG_BEGATEWAY_MAX_AMOUNT_EXPLAIN" />
         <field name="TestMode" type="list" default="0" label="PLG_BEGATEWAY_VM3_TEST_MODE">
           <option value="0">JNO</option>
           <option value="1">JYES</option>
@@ -43,8 +46,11 @@
           <option value="0">JNO</option>
           <option value="1">JYES</option>
         </field>
-        <field name="payment_logos" scope="com_virtuemart" type="vmfiles" label="PLG_BEGATEWAY_VM3_LOGO"
-                      directory="/images/stories/virtuemart/payment"
+        <field name="status_pending" type="vmorderstate" scope="com_virtuemart" default="P" label="PLG_BEGATEWAY_STATUS_PENDING" description="PLG_BEGATEWAY_STATUS_PENDING_EXPLAIN" />
+        <field name="status_success" type="vmorderstate" scope="com_virtuemart" default="C" label="PLG_BEGATEWAY_STATUS_SUCCESS" description="PLG_BEGATEWAY_STATUS_SUCCESS_EXPLAIN" />
+        <field name="status_canceled" type="vmorderstate" scope="com_virtuemart" default="X" label="PLG_BEGATEWAY_STATUS_FAILED" description="PLG_BEGATEWAY_STATUS_FAILED_EXPLAIN" />
+        <field name="payment_logos" scope="com_virtuemart" multiple="true" type="vmfiles" label="PLG_BEGATEWAY_VM3_LOGO"
+                      directory="/images/virtuemart/payment"
                       default="default" hide_default="1" hide_none="1" stripext="0" exclude="^_"/>
       </fieldset>
     </fields>
