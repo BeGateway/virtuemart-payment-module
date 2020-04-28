@@ -18,38 +18,38 @@
   <vmconfig>
     <fields name="params">
       <fieldset name="basic">
-        <field name="ShopId" type="text" label="PLG_BEGATEWAY_VM3_SHOPID" />
-        <field name="ShopKey" type="text" label="PLG_BEGATEWAY_VM3_SHOPKEY" size="100"/>
-        <field name="GatewayUrl" type="text" label="PLG_BEGATEWAY_VM3_GATEWAYURL" size="100" />
-        <field name="PageUrl" type="text" label="PLG_BEGATEWAY_VM3_PAGEURL" size="100"/>
-        <field name="TransactionType" type="list" default="0" label="PLG_BEGATEWAY_VM3_TRANSACTIONTYPE">
-          <option value="payment">PLG_BEGATEWAY_VM3_TRX_TYPE_PAYMENT</option>
-          <option value="authorization">PLG_BEGATEWAY_VM3_TRX_TYPE_AUTH</option>
+        <field name="ShopId" type="text" label="VMPAYMENT_BEGATEWAY_SHOPID" />
+        <field name="ShopKey" type="text" label="VMPAYMENT_BEGATEWAY_SHOPKEY" size="100"/>
+        <field name="GatewayUrl" type="text" label="VMPAYMENT_BEGATEWAY_GATEWAYURL" size="100" />
+        <field name="PageUrl" type="text" label="VMPAYMENT_BEGATEWAY_PAGEURL" size="100"/>
+        <field name="TransactionType" type="list" default="0" label="VMPAYMENT_BEGATEWAY_TRANSACTIONTYPE">
+          <option value="payment">VMPAYMENT_BEGATEWAY_TRX_TYPE_PAYMENT</option>
+          <option value="authorization">VMPAYMENT_BEGATEWAY_TRX_TYPE_AUTH</option>
         </field>
-        <field name="payment_currency" type="vmacceptedcurrency" default="" label="PLG_BEGATEWAY_CURRENCY" description="PLG_BEGATEWAY_CURRENCY_DESC" />
-        <field name="countries" type="vmcountries"  scope="com_virtuemart" default="" label="PLG_BEGATEWAY_COUNTRIES" description="PLG_BEGATEWAY_COUNTRIES_DESC"/>
-        <field name="min_amount" type="text"  label="PLG_BEGATEWAY_MIN_AMOUNT" description="PLG_BEGATEWAY_MIN_AMOUNT_EXPLAIN" />
-        <field name="max_amount" type="text"  label="PLG_BEGATEWAY_MAX_AMOUNT" description="PLG_BEGATEWAY_MAX_AMOUNT_EXPLAIN" />
-        <field name="TestMode" type="list" default="0" label="PLG_BEGATEWAY_VM3_TEST_MODE">
+        <field name="payment_currency" type="vmacceptedcurrency" default="" label="VMPAYMENT_BEGATEWAY_CURRENCY" description="VMPAYMENT_BEGATEWAY_CURRENCY_DESC" />
+        <field name="countries" type="vmcountries"  scope="com_virtuemart" default="" label="VMPAYMENT_BEGATEWAY_COUNTRIES" description="VMPAYMENT_BEGATEWAY_COUNTRIES_DESC"/>
+        <field name="min_amount" type="text"  label="VMPAYMENT_BEGATEWAY_MIN_AMOUNT" description="VMPAYMENT_BEGATEWAY_MIN_AMOUNT_EXPLAIN" />
+        <field name="max_amount" type="text"  label="VMPAYMENT_BEGATEWAY_MAX_AMOUNT" description="VMPAYMENT_BEGATEWAY_MAX_AMOUNT_EXPLAIN" />
+        <field name="TestMode" type="list" default="0" label="VMPAYMENT_BEGATEWAY_TEST_MODE">
           <option value="0">JNO</option>
           <option value="1">JYES</option>
         </field>
-        <field name="EnableCards" type="list" default="1" label="PLG_BEGATEWAY_VM3_ENABLE_CARD">
+        <field name="EnableCards" type="list" default="1" label="VMPAYMENT_BEGATEWAY_ENABLE_CARD">
           <option value="1">JYES</option>
           <option value="0">JNO</option>
         </field>
-        <field name="EnableHalva" type="list" default="0" label="PLG_BEGATEWAY_VM3_ENABLE_HALVA">
+        <field name="EnableHalva" type="list" default="0" label="VMPAYMENT_BEGATEWAY_ENABLE_HALVA">
           <option value="0">JNO</option>
           <option value="1">JYES</option>
         </field>
-        <field name="EnableErip" type="list" default="0" label="PLG_BEGATEWAY_VM3_ENABLE_ERIP">
+        <field name="EnableErip" type="list" default="0" label="VMPAYMENT_BEGATEWAY_ENABLE_ERIP">
           <option value="0">JNO</option>
           <option value="1">JYES</option>
         </field>
-        <field name="status_pending" type="vmorderstate" scope="com_virtuemart" default="P" label="PLG_BEGATEWAY_STATUS_PENDING" description="PLG_BEGATEWAY_STATUS_PENDING_EXPLAIN" />
-        <field name="status_success" type="vmorderstate" scope="com_virtuemart" default="C" label="PLG_BEGATEWAY_STATUS_SUCCESS" description="PLG_BEGATEWAY_STATUS_SUCCESS_EXPLAIN" />
-        <field name="status_canceled" type="vmorderstate" scope="com_virtuemart" default="X" label="PLG_BEGATEWAY_STATUS_FAILED" description="PLG_BEGATEWAY_STATUS_FAILED_EXPLAIN" />
-        <field name="payment_logos" scope="com_virtuemart" multiple="true" type="vmfiles" label="PLG_BEGATEWAY_VM3_LOGO"
+        <field name="status_pending" type="vmorderstate" scope="com_virtuemart" default="P" label="VMPAYMENT_BEGATEWAY_STATUS_PENDING" description="VMPAYMENT_BEGATEWAY_STATUS_PENDING_EXPLAIN" />
+        <field name="status_success" type="vmorderstate" scope="com_virtuemart" default="C" label="VMPAYMENT_BEGATEWAY_STATUS_SUCCESS" description="VMPAYMENT_BEGATEWAY_STATUS_SUCCESS_EXPLAIN" />
+        <field name="status_canceled" type="vmorderstate" scope="com_virtuemart" default="X" label="VMPAYMENT_BEGATEWAY_STATUS_FAILED" description="VMPAYMENT_BEGATEWAY_STATUS_FAILED_EXPLAIN" />
+        <field name="payment_logos" scope="com_virtuemart" multiple="true" type="vmfiles" label="VMPAYMENT_BEGATEWAY_LOGO"
                       directory="/images/virtuemart/payment"
                       default="default" hide_default="1" hide_none="1" stripext="0" exclude="^_"/>
       </fieldset>

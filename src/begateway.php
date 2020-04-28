@@ -74,7 +74,7 @@ class plgVMPaymentBegateway extends vmPSPlugin
         $transaction->money->setCurrency($currency_code_3);
         $transaction->money->setAmount($totalInPaymentCurrency);
         $transaction->setTrackingId($order['details']['BT']->virtuemart_paymentmethod_id . '|' . $order_id);
-        $transaction->setDescription(vmText::_('PLG_BEGATEWAY_VM3_ORDER') . ' #' . $order_id);
+        $transaction->setDescription(vmText::_('VMPAYMENT_BEGATEWAY_ORDER') . ' #' . $order_id);
         $transaction->setLanguage(substr($order['details']['BT']->order_language, 0, 2));
 
         if($method->TransactionType == 'authorization') {
