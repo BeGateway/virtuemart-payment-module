@@ -8,6 +8,7 @@ ARG virtuemart_version
 
 ADD src/$virtuemart_version.zip /joomla-vm.zip
 ADD scripts/start.sh /start.sh
+ADD config/configuration.php /var/www/html/
 COPY config/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 
 RUN chown -R nobody.nobody /var/www

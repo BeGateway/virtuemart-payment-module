@@ -11,7 +11,7 @@ services:
       - 80:8080
     tty: true
     volumes:
-     - ./src:/var/www/html/plugins/vmpayment/begateway
+      - ./src:/var/www/html/plugins/vmpayment/begateway
     restart: always
 
   virtuemart_3_4:
@@ -36,6 +36,7 @@ services:
     volumes:
       - /var/lib/mysql
       - ./docker/etc/mysql/mysql.conf.d/sql_mode.cnf:/etc/mysql/mysql.conf.d/sql_mode.cnf
+      - ./docker/joomla.sql:/docker-entrypoint-initdb.d/joomla.sql
     environment:
       MYSQL_ROOT_PASSWORD: admin
       MYSQL_DATABASE: joomla
