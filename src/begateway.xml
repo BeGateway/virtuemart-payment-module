@@ -52,7 +52,6 @@
         </field>
         <field name="status_pending" type="vmorderstate" scope="com_virtuemart" default="P" label="VMPAYMENT_BEGATEWAY_STATUS_PENDING" description="VMPAYMENT_BEGATEWAY_STATUS_PENDING_EXPLAIN" />
         <field name="status_success" type="vmorderstate" scope="com_virtuemart" default="C" label="VMPAYMENT_BEGATEWAY_STATUS_SUCCESS" description="VMPAYMENT_BEGATEWAY_STATUS_SUCCESS_EXPLAIN" />
-        <field name="status_canceled" type="vmorderstate" scope="com_virtuemart" default="X" label="VMPAYMENT_BEGATEWAY_STATUS_FAILED" description="VMPAYMENT_BEGATEWAY_STATUS_FAILED_EXPLAIN" />
         <field name="payment_logos" scope="com_virtuemart" multiple="true" type="vmfiles" label="VMPAYMENT_BEGATEWAY_LOGO"
                       directory="/images/virtuemart/payment"
                       default="default" hide_default="1" hide_none="1" stripext="0" exclude="^_"/>

@@ -102,11 +102,11 @@ class plgVMPaymentBegateway extends vmPSPlugin
           );
         }
 
-        $notification_url = JROUTE::_(JURI::root() . 'index.php?option=com_virtuemart&view=pluginresponse&task=pluginresponsereceived&action=begateway_result');
+        $notification_url = JROUTE::_(JURI::root() . 'index.php?option=com_virtuemart&view=pluginresponse&task=pluginnotification&tmpl=component');
         $notification_url = str_replace('carts.local','webhook.begateway.com:8443', $notification_url);
 
         $transaction->setNotificationUrl($notification_url);
-        $transaction->setSuccessUrl(JROUTE::_(JURI::root() . 'index.php?option=com_virtuemart&view=pluginresponse&task=pluginresponsereceived&action=begateway_success'));
+        $transaction->setSuccessUrl(JROUTE::_(JURI::root() . 'index.php?option=com_virtuemart&view=pluginresponse&task=pluginresponsereceived&on=' . $order['details']['BT']->order_number . '&pm=' . $order['details']['BT']->virtuemart_paymentmethod_id));
         $transaction->setFailUrl(JROUTE::_(JURI::root() . 'index.php?option=com_virtuemart&view=pluginresponse&task=pluginUserPaymentCancel&on=' . $order['details']['BT']->order_number . '&pm=' . $order['details']['BT']->virtuemart_paymentmethod_id));
         $transaction->setDeclineUrl(JROUTE::_(JURI::root() . 'index.php?option=com_virtuemart&view=pluginresponse&task=pluginUserPaymentCancel&on=' . $order['details']['BT']->order_number . '&pm=' . $order['details']['BT']->virtuemart_paymentmethod_id));
         $transaction->setCancelUrl(JROUTE::_(JURI::root() . 'index.php?option=com_virtuemart'));
@@ -292,62 +292,56 @@ class plgVMPaymentBegateway extends vmPSPlugin
 
     function plgVmOnPaymentNotification()
     {
-        return null;
+      $webhook = new \BeGateway\Webhook;
+
+      vmdebug ('BEGATEWAY plgVmOnPaymentResponseReceived', print_r($webhook->getResponseArray(), true));
+
+      if (!class_exists('VirtueMartModelOrders'))
+          require(JPATH_VM_ADMINISTRATOR . DS . 'models' . DS . 'orders.php');
+
+      $tracking_id = explode('|', $webhook->getTrackingId());
+      $virtuemart_order_id = VirtueMartModelOrders::getOrderIdByOrderNumber($tracking_id[1]);
+
+      $modelOrder = new VirtueMartModelOrders();
+      $order      = $modelOrder->getOrder($virtuemart_order_id);
+
+      if (!($method = $this->getVmPluginMethod($tracking_id[0]))) {
+        return NULL;
+      } // Another method was selected, do nothing
+
+      if (!isset($order['details']['BT']->virtuemart_order_id)) {
+          return NULL;
+      }
+
+      \BeGateway\Settings::$shopId = $method->ShopId;
+      \BeGateway\Settings::$shopKey = $method->ShopKey;
+      \BeGateway\Settings::$gatewayBase = 'https://' . $method->GatewayUrl;
+      \BeGateway\Settings::$checkoutBase = 'https://' . $method->PageUrl;
+
+      if ($webhook->isAuthorized() && $webhook->isSuccess() && $order['details']['BT']->order_status == $method->status_pending) {
+          $message = 'UID: '.$webhook->getUid().'<br>';
+          if(isset($webhook->getResponse()->transaction->three_d_secure_verification)) {
+            $message .= '3-D Secure: '.$webhook->getResponse()->transaction->three_d_secure_verification->pa_status.'<br>';
+          }
+
+          $order['order_status']      = $method->status_success;
+          $order['customer_notified'] = 1;
+          $order['comments'] = $message;
+          $modelOrder->updateStatusForOneOrder($virtuemart_order_id, $order, true);
+          die("OK");
+      } else {
+        die("ERROR");
+      }
     }
 
     function plgVmOnPaymentResponseReceived(&$html)
     {
-        $get = JRequest::get();
+      if (!class_exists('VirtueMartCart'))
+          require(JPATH_VM_SITE . DS . 'helpers' . DS . 'cart.php');
+      $cart = VirtueMartCart::getCart();
+      $cart->emptyCart();
 
-        if ($get['action'] == 'begateway_success') {
-            if (!class_exists('VirtueMartCart'))
-                require(JPATH_VM_SITE . DS . 'helpers' . DS . 'cart.php');
-            $cart = VirtueMartCart::getCart();
-            $cart->emptyCart();
-
-            return true;
-        } else if ($get['action'] == 'begateway_result') {
-
-            $webhook = new \BeGateway\Webhook;
-
-            if (!class_exists('VirtueMartModelOrders'))
-                require(JPATH_VM_ADMINISTRATOR . DS . 'models' . DS . 'orders.php');
-
-            $tracking_id = explode('|', $webhook->getTrackingId());
-            $virtuemart_order_id = VirtueMartModelOrders::getOrderIdByOrderNumber($tracking_id[1]);
-
-            $modelOrder = new VirtueMartModelOrders();
-            $order      = $modelOrder->getOrder($virtuemart_order_id);
-
-            if (!($method = $this->getVmPluginMethod($tracking_id[0]))) {
-              return NULL;
-            } // Another method was selected, do nothing
-
-            if (!isset($order['details']['BT']->virtuemart_order_id)) {
-                return NULL;
-            }
-
-            \BeGateway\Settings::$shopId = $method->ShopId;
-            \BeGateway\Settings::$shopKey = $method->ShopKey;
-            \BeGateway\Settings::$gatewayBase = 'https://' . $method->GatewayUrl;
-            \BeGateway\Settings::$checkoutBase = 'https://' . $method->PageUrl;
-
-            if ($webhook->isAuthorized() && $webhook->isSuccess() && $order['details']['BT']->order_status == 'P') {
-                $message = 'UID: '.$webhook->getUid().'<br>';
-                if(isset($webhook->getResponse()->transaction->three_d_secure_verification)) {
-                  $message .= '3-D Secure: '.$webhook->getResponse()->transaction->three_d_secure_verification->pa_status.'<br>';
-                }
-
-                $order['order_status']      = 'C';
-                $order['customer_notified'] = 1;
-                $order['comments'] = $message;
-                $modelOrder->updateStatusForOneOrder($virtuemart_order_id, $order, true);
-            } else {
-              return NULL;
-            }
-        } else {
-          return NULL;
-        }
+      return true;
     }
 
     private function _loadLibrary() {
@@ -364,6 +358,8 @@ class plgVMPaymentBegateway extends vmPSPlugin
         'payment_currency' => array('', 'int'),
         'TestMode' => array(0, 'int'),
         'debug_mode' => array(0, 'int'),
+        'status_pending' => array('', 'char'),
+        'status_success' => array('', 'char'),
         'EnableCards' => array(0, 'int'),
         'EnableHalva' => array(0, 'int'),
         'EnableErip' => array(0, 'int'),
