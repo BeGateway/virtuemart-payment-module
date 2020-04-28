@@ -344,6 +344,28 @@ class plgVMPaymentBegateway extends vmPSPlugin
       return true;
     }
 
+    function plgVmOnUserPaymentCancel() {
+
+      if (!class_exists('VirtueMartModelOrders'))
+      require( JPATH_VM_ADMINISTRATOR . DS . 'models' . DS . 'orders.php' );
+
+      $order_number = vRequest::getVar('on');
+      if (!$order_number)
+      return false;
+      $db = JFactory::getDBO();
+      $query = 'SELECT ' . $this->_tablename . '.`virtuemart_order_id` FROM ' . $this->_tablename . " WHERE  `order_number`= '" . $order_number . "'";
+
+      $db->setQuery($query);
+      $virtuemart_order_id = $db->loadResult();
+
+      if (!$virtuemart_order_id) {
+          return null;
+      }
+      $this->handlePaymentUserCancel($virtuemart_order_id);
+
+      return true;
+    }
+
     private function _loadLibrary() {
       require JPATH_SITE . DS . 'plugins' . DS . 'vmpayment' . DS . 'begateway' . DS . 'begateway-api-php' . DS . 'lib' . DS . 'BeGateway.php';
     }
