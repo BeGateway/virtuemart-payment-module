@@ -1,0 +1,42 @@
+version: '3.7'
+
+services:
+  virtuemart: &virtuemart
+    build: &build
+      context: ./docker
+      dockerfile: Dockerfile
+    depends_on:
+      - mysql
+    ports:
+      - 80:8080
+    tty: true
+    volumes:
+      - ./src:/var/www/html/plugins/vmpayment/begateway
+    restart: always
+
+  virtuemart_3_4:
+    build:
+      args:
+        virtuemart_version: "VirtueMart3.4.2_Joomla_3.8.12-Stable-Full_Package"
+      <<: *build
+    <<: *virtuemart
+
+  virtuemart_3_6:
+    build:
+      args:
+        virtuemart_version: "VirtueMart3.6.10_Joomla_3.9.13-Stable-Full_Package"
+      <<: *build
+    # volumes:
+    #   - ./begateway:/var/www/html/modules/begateway
+    <<: *virtuemart
+
+  mysql:
+    image: mysql:5.5
+    restart: always
+    volumes:
+      - /var/lib/mysql
+      - ./docker/etc/mysql/mysql.conf.d/sql_mode.cnf:/etc/mysql/mysql.conf.d/sql_mode.cnf
+      - ./docker/joomla.sql:/docker-entrypoint-initdb.d/joomla.sql
+    environment:
+      MYSQL_ROOT_PASSWORD: admin
+      MYSQL_DATABASE: joomla

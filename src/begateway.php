@@ -53,8 +53,14 @@ class plgVMPaymentBegateway extends vmPSPlugin
             return FALSE;
         }
 
-        $currency               = shopFunctions::getCurrencyByID($cart->pricesCurrency, 'currency_code_3');
-        $totalInPaymentCurrency = vmPSPlugin::getAmountInCurrency($order['details']['BT']->order_total, $method->payment_currency);
+        $this->getPaymentCurrency($method);
+        $q = 'SELECT `currency_code_3` FROM `#__virtuemart_currencies` WHERE `virtuemart_currency_id`="' . $method->payment_currency . '" ';
+        $db = JFactory::getDBO();
+        $db->setQuery($q);
+        $currency_code_3 = $db->loadResult();
+
+        $paymentCurrency = CurrencyDisplay::getInstance($method->payment_currency);
+        $totalInPaymentCurrency = round($paymentCurrency->convertCurrencyTo($method->payment_currency, $order['details']['BT']->order_total, false), 2);
 
         \BeGateway\Settings::$shopId = $method->ShopId;
         \BeGateway\Settings::$shopKey = $method->ShopKey;
@@ -65,10 +71,10 @@ class plgVMPaymentBegateway extends vmPSPlugin
 
         $transaction = new \BeGateway\GetPaymentToken;
 
-        $transaction->money->setCurrency($currency);
-        $transaction->money->setAmount($totalInPaymentCurrency['value']);
+        $transaction->money->setCurrency($currency_code_3);
+        $transaction->money->setAmount($totalInPaymentCurrency);
         $transaction->setTrackingId($order['details']['BT']->virtuemart_paymentmethod_id . '|' . $order_id);
-        $transaction->setDescription(vmText::_('PLG_BEGATEWAY_VM3_ORDER') . ' #' . $order_id);
+        $transaction->setDescription(vmText::_('VMPAYMENT_BEGATEWAY_ORDER') . ' #' . $order_id);
         $transaction->setLanguage(substr($order['details']['BT']->order_language, 0, 2));
 
         if($method->TransactionType == 'authorization') {
@@ -96,11 +102,11 @@ class plgVMPaymentBegateway extends vmPSPlugin
           );
         }
 
-        $notification_url = JROUTE::_(JURI::root() . 'index.php?option=com_virtuemart&view=pluginresponse&task=pluginresponsereceived&action=begateway_result');
+        $notification_url = JROUTE::_(JURI::root() . 'index.php?option=com_virtuemart&view=pluginresponse&task=pluginnotification&tmpl=component');
         $notification_url = str_replace('carts.local','webhook.begateway.com:8443', $notification_url);
 
         $transaction->setNotificationUrl($notification_url);
-        $transaction->setSuccessUrl(JROUTE::_(JURI::root() . 'index.php?option=com_virtuemart&view=pluginresponse&task=pluginresponsereceived&action=begateway_success'));
+        $transaction->setSuccessUrl(JROUTE::_(JURI::root() . 'index.php?option=com_virtuemart&view=pluginresponse&task=pluginresponsereceived&on=' . $order['details']['BT']->order_number . '&pm=' . $order['details']['BT']->virtuemart_paymentmethod_id));
         $transaction->setFailUrl(JROUTE::_(JURI::root() . 'index.php?option=com_virtuemart&view=pluginresponse&task=pluginUserPaymentCancel&on=' . $order['details']['BT']->order_number . '&pm=' . $order['details']['BT']->virtuemart_paymentmethod_id));
         $transaction->setDeclineUrl(JROUTE::_(JURI::root() . 'index.php?option=com_virtuemart&view=pluginresponse&task=pluginUserPaymentCancel&on=' . $order['details']['BT']->order_number . '&pm=' . $order['details']['BT']->virtuemart_paymentmethod_id));
         $transaction->setCancelUrl(JROUTE::_(JURI::root() . 'index.php?option=com_virtuemart'));
@@ -133,15 +139,33 @@ class plgVMPaymentBegateway extends vmPSPlugin
           }
         }
 
-        $response = $transaction->submit();
-
-        if(!$response->isSuccess()) {
-          echo $response->getMessage();
-          die;
+        if ($method->debug_mode == 1) {
+          vmDebug('BEGATEWAY token request data', print_r($transaction, true));
         }
 
-        header('Location: '.$response->getRedirectUrl());
-        die;
+        $response = $transaction->submit();
+
+        if ($method->debug_mode == 1) {
+          vmDebug('BEGATEWAY token request response', print_r($response, true));
+        }
+
+        $returnValue = 0;
+
+        if ($response->isSuccess()) {
+    			$returnValue = 2;
+    			$html = $this->renderByLayout(
+            'displaypayment',
+            array(
+			        'response' => $response->getRedirectUrl()
+			      )
+          );
+    		} else {
+    			$html = vmText::_ ('VMPAYMENT_BEGATEWAY_TECHNICAL_ERROR') .
+  				" <br /> - " . addslashes ($response->getMessage()) . "<br />" .
+  				vmText::_ ('VMPAYMENT_BEGATEWAY_CONTACT_SHOPOWNER');
+    		}
+
+        return $this->processConfirmedOrderPaymentResponse ($returnValue, $cart, $order, $html, $this->renderPluginName($method, $order), '');
     }
 
     function plgVmOnShowOrderBEPayment($virtuemart_order_id, $virtuemart_payment_id)
@@ -268,65 +292,103 @@ class plgVMPaymentBegateway extends vmPSPlugin
 
     function plgVmOnPaymentNotification()
     {
-        return null;
+      $webhook = new \BeGateway\Webhook;
+
+      vmdebug ('BEGATEWAY plgVmOnPaymentResponseReceived', print_r($webhook->getResponseArray(), true));
+
+      if (!class_exists('VirtueMartModelOrders'))
+          require(JPATH_VM_ADMINISTRATOR . DS . 'models' . DS . 'orders.php');
+
+      $tracking_id = explode('|', $webhook->getTrackingId());
+      $virtuemart_order_id = VirtueMartModelOrders::getOrderIdByOrderNumber($tracking_id[1]);
+
+      $modelOrder = new VirtueMartModelOrders();
+      $order      = $modelOrder->getOrder($virtuemart_order_id);
+
+      if (!($method = $this->getVmPluginMethod($tracking_id[0]))) {
+        return NULL;
+      } // Another method was selected, do nothing
+
+      if (!isset($order['details']['BT']->virtuemart_order_id)) {
+          return NULL;
+      }
+
+      \BeGateway\Settings::$shopId = $method->ShopId;
+      \BeGateway\Settings::$shopKey = $method->ShopKey;
+      \BeGateway\Settings::$gatewayBase = 'https://' . $method->GatewayUrl;
+      \BeGateway\Settings::$checkoutBase = 'https://' . $method->PageUrl;
+
+      if ($webhook->isAuthorized() && $webhook->isSuccess() && $order['details']['BT']->order_status == $method->status_pending) {
+          $message = 'UID: '.$webhook->getUid().'<br>';
+          if(isset($webhook->getResponse()->transaction->three_d_secure_verification)) {
+            $message .= '3-D Secure: '.$webhook->getResponse()->transaction->three_d_secure_verification->pa_status.'<br>';
+          }
+
+          $order['order_status']      = $method->status_success;
+          $order['customer_notified'] = 1;
+          $order['comments'] = $message;
+          $modelOrder->updateStatusForOneOrder($virtuemart_order_id, $order, true);
+          die("OK");
+      } else {
+        die("ERROR");
+      }
     }
 
     function plgVmOnPaymentResponseReceived(&$html)
     {
-        $get = JRequest::get();
+      if (!class_exists('VirtueMartCart'))
+          require(JPATH_VM_SITE . DS . 'helpers' . DS . 'cart.php');
+      $cart = VirtueMartCart::getCart();
+      $cart->emptyCart();
 
-        if ($get['action'] == 'begateway_success') {
-            if (!class_exists('VirtueMartCart'))
-                require(JPATH_VM_SITE . DS . 'helpers' . DS . 'cart.php');
-            $cart = VirtueMartCart::getCart();
-            $cart->emptyCart();
+      return true;
+    }
 
-            return true;
-        } else if ($get['action'] == 'begateway_result') {
+    function plgVmOnUserPaymentCancel() {
 
-            $webhook = new \BeGateway\Webhook;
+      if (!class_exists('VirtueMartModelOrders'))
+      require( JPATH_VM_ADMINISTRATOR . DS . 'models' . DS . 'orders.php' );
 
-            if (!class_exists('VirtueMartModelOrders'))
-                require(JPATH_VM_ADMINISTRATOR . DS . 'models' . DS . 'orders.php');
+      $order_number = vRequest::getVar('on');
+      if (!$order_number)
+      return false;
+      $db = JFactory::getDBO();
+      $query = 'SELECT ' . $this->_tablename . '.`virtuemart_order_id` FROM ' . $this->_tablename . " WHERE  `order_number`= '" . $order_number . "'";
 
-            $tracking_id = explode('|', $webhook->getTrackingId());
-            $virtuemart_order_id = VirtueMartModelOrders::getOrderIdByOrderNumber($tracking_id[1]);
+      $db->setQuery($query);
+      $virtuemart_order_id = $db->loadResult();
 
-            $modelOrder = new VirtueMartModelOrders();
-            $order      = $modelOrder->getOrder($virtuemart_order_id);
+      if (!$virtuemart_order_id) {
+          return null;
+      }
+      $this->handlePaymentUserCancel($virtuemart_order_id);
 
-            if (!($method = $this->getVmPluginMethod($tracking_id[0]))) {
-              return NULL;
-            } // Another method was selected, do nothing
-
-            if (!isset($order['details']['BT']->virtuemart_order_id)) {
-                return NULL;
-            }
-
-            \BeGateway\Settings::$shopId = $method->ShopId;
-            \BeGateway\Settings::$shopKey = $method->ShopKey;
-            \BeGateway\Settings::$gatewayBase = 'https://' . $method->GatewayUrl;
-            \BeGateway\Settings::$checkoutBase = 'https://' . $method->PageUrl;
-
-            if ($webhook->isAuthorized() && $webhook->isSuccess() && $order['details']['BT']->order_status == 'P') {
-                $message = 'UID: '.$webhook->getUid().'<br>';
-                if(isset($webhook->getResponse()->transaction->three_d_secure_verification)) {
-                  $message .= '3-D Secure: '.$webhook->getResponse()->transaction->three_d_secure_verification->pa_status.'<br>';
-                }
-
-                $order['order_status']      = 'C';
-                $order['customer_notified'] = 1;
-                $order['comments'] = $message;
-                $modelOrder->updateStatusForOneOrder($virtuemart_order_id, $order, true);
-            } else {
-              return NULL;
-            }
-        } else {
-          return NULL;
-        }
+      return true;
     }
 
     private function _loadLibrary() {
       require JPATH_SITE . DS . 'plugins' . DS . 'vmpayment' . DS . 'begateway' . DS . 'begateway-api-php' . DS . 'lib' . DS . 'BeGateway.php';
+    }
+
+    public function getVarsToPush() {
+      return array(
+        'ShopId' => array('', 'char'),
+        'ShopKey' => array('', 'char'),
+        'GatewayUrl' => array('', 'char'),
+        'PageUrl' => array('', 'char'),
+        'TransactionType' => array('', 'char'),
+        'payment_currency' => array('', 'int'),
+        'TestMode' => array(0, 'int'),
+        'debug_mode' => array(0, 'int'),
+        'status_pending' => array('', 'char'),
+        'status_success' => array('', 'char'),
+        'EnableCards' => array(0, 'int'),
+        'EnableHalva' => array(0, 'int'),
+        'EnableErip' => array(0, 'int'),
+        'payment_logos' => array('', 'char'),
+        'countries' => array(0, 'char'),
+        'min_amount' => array(0, 'int'),
+        'max_amount' => array(0, 'int')
+      );
     }
 }
