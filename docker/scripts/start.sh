@@ -6,6 +6,14 @@ if [ ! -e /var/www/html/.first-run-complete ]; then
   echo "Do not remove this file." > /var/www/html/.first-run-complete
   rm -rf /var/www/html/installation
 
+  mkdir -p /var/www/html/images/virtuemart
+  mkdir -p /var/www/html/images/virtuemart/category
+  mkdir -p /var/www/html/images/virtuemart/category/resized
+  mkdir -p /var/www/html/images/virtuemart/product
+  mkdir -p /var/www/html/images/virtuemart/product/resized
+  mkdir -p /var/www/html/images/virtuemart/manufacturer
+  mkdir -p /var/www/html/images/virtuemart/manufacturer/resized
+  
   chown -R nobody.nobody /var/www
 fi
 
