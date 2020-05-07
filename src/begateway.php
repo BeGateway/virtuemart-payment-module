@@ -161,7 +161,7 @@ class plgVMPaymentBegateway extends vmPSPlugin
                     var msg="'.vmText::_('VMPAYMENT_BEGATEWAY_REDIRECT_MESSAGE').'";
                     jQuery("body").append("<div class=\"vmLoadingDiv\"><div class=\"vmLoadingDivMsg\">"+msg+"</div></div>");
             window.setTimeout("jQuery(\'.vmLoadingDiv\').hide();",3000);
-            window.setTimeout("window.location.replace(\'' . $response->getRedirectUrl() . '\');", 3000);
+            window.setTimeout("window.location.replace(\'' . $response->getRedirectUrl() . '\');", 400);
             })
           ');
 
